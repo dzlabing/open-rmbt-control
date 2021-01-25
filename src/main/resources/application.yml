@@ -1,4 +1,9 @@
+server:
+  servlet:
+    context-path: /rtr
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: rtr-backend
   datasource:
@@ -19,7 +24,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     enabled: false
-
 
 elastic-index:
   basicTenantIndexes:
@@ -43,28 +47,30 @@ jira:
   serviceDeskId: 6
   url: https://specure.atlassian.net
   username: batalin.a@dbbest.com
-  password: HnpRkUKiKaxOaCI8ZWfV400A
+  password: SuperSecurePassword
 
 ---
 spring:
   profiles: dev
+  datasource:
+    poolSize: 20
+    minIdle: 1
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_URI}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    tomcat:
+      test-while-idle: true
+      test-on-borrow: true
+      validation-query: SELECT 1
 
 measurement-server:
-  host: ${CONTROL_SERVER_HOST}
+  host: api-test.nettest.org
 
 client-tenant:
   clientTenantMapping:
     rtr: rtr_dev
   defaultTenant: rtr
 
-datasource:
-  poolSize: 20
-  minIdle: 1
-  driverClassName: org.postgresql.Driver
-  url: jdbc:postgresql://127.0.0.1:5431/rtr
-  username: rtr
-  password: password
-  tomcat:
-    test-while-idle: true
-    test-on-borrow: true
-    validation-query: SELECT 1
+git:
+  branch:${git.branch}
