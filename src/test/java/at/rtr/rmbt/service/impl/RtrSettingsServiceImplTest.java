@@ -1,17 +1,18 @@
 package at.rtr.rmbt.service.impl;
 
 import at.rtr.rmbt.TestConstants;
-import at.rtr.rmbt.model.RtrClient;
-import at.rtr.rmbt.model.Settings;
-import at.rtr.rmbt.request.AdminSettingsRequest;
-import at.rtr.rmbt.request.RtrSettingsRequest;
 import at.rtr.rmbt.constant.Config;
 import at.rtr.rmbt.exception.NotSupportedClientVersionException;
+import at.rtr.rmbt.model.RtrClient;
+import at.rtr.rmbt.model.Settings;
 import at.rtr.rmbt.model.enums.ClientType;
 import at.rtr.rmbt.repository.SettingsRepository;
 import at.rtr.rmbt.request.AdminSettingsBodyRequest;
+import at.rtr.rmbt.request.AdminSettingsRequest;
+import at.rtr.rmbt.request.RtrSettingsRequest;
 import at.rtr.rmbt.response.*;
 import at.rtr.rmbt.service.*;
+import com.specure.core.service.impl.UUIDGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -207,7 +208,7 @@ public class RtrSettingsServiceImplTest {
         var response = rtrSettingsService.getSettings(rtrSettingsRequest);
 
         assertEquals(TestConstants.DEFAULT_CLIENT_UUID, response.getSettings().get(0).getUuid());
-        assertEquals(getDefaultTermAndConditionsResponse(), response.getSettings().get(0).getTermAndConditionsResponse());
+        assertEquals(getAndroidTermAndConditionsResponse(), response.getSettings().get(0).getTermAndConditionsResponse());
     }
 
     @Test
@@ -226,7 +227,8 @@ public class RtrSettingsServiceImplTest {
         List<Settings> actual = settingsArgumentCaptor.getValue();
         assertEquals(settings, actual.get(0));
         assertEquals("port_map_server", actual.get(1).getKey());
-        assertEquals("123", actual.get(1).getValue());    }
+        assertEquals("123", actual.get(1).getValue());
+    }
 
     @Test
     public void createSettings_whenSettingsLongExist_expectSettingsUpdated() {
@@ -245,7 +247,7 @@ public class RtrSettingsServiceImplTest {
         assertEquals(settings, actual.get(0));
         assertEquals("port_map_server", actual.get(1).getKey());
         assertEquals("123", actual.get(1).getValue());
-     }
+    }
 
     @Test
     public void createSettings_whenSettingsNotExist_expectSettingsCreated() {

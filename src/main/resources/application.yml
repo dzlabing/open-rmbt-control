@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /rtr
+    context-path: /RMBTControlServer
 spring:
   main:
     allow-bean-definition-overriding: true
@@ -23,7 +23,7 @@ spring:
     show-sql: false
     database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
   flyway:
-    enabled: false
+    enabled: true
 
 app:
   rmbt:
