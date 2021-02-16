@@ -82,7 +82,7 @@ public class TestSettingsFacade {
         String clientIpAddress = request.getRemoteAddr();
         InetAddress clientAddress = null;
         try {
-            clientAddress = InetAddress.getByAddress(clientIpAddress.getBytes());
+            clientAddress = InetAddress.getByName(clientIpAddress);
         } catch (UnknownHostException ignored) {
         }
         TestSettingsResponse.TestSettingsResponseBuilder builder = TestSettingsResponse.builder();
@@ -107,19 +107,22 @@ public class TestSettingsFacade {
             }
 
             TestSettingsRequest.LoopModeInfo loopModeInfo = testSettingsRequest.getLoopModeInfo();
-            loopModeInfo.setClientUuid(settingUuid);
 
-            //if no loop mode uuid is set - generate one
-            if (loopModeInfo.getLoopUuid() == null)
-                loopModeInfo.setLoopUuid(UUID.randomUUID().toString());
+            LoopModeSettings loopModeSettings = null;
+            if (loopModeInfo != null) {
+                loopModeSettings = toLoopModeSettings(loopModeInfo);
+                loopModeSettings.setClientUuid(uuid);
 
-            //old clients expect a "text_counter"
-            if (loopModeInfo.getTestCounter() == null)
-                loopModeInfo.setTestCounter(loopModeInfo.getTextCounter());
+                //if no loop mode uuid is set - generate one
+                if (loopModeSettings.getLoopUuid() == null)
+                    loopModeSettings.setLoopUuid(UUID.randomUUID());
 
-            LoopModeSettings loopModeSettings = toLoopModeSettings(loopModeInfo);
+                //old clients expect a "text_counter"
+                if (loopModeSettings.getTestCounter() == null)
+                    loopModeSettings.setTestCounter(loopModeInfo.getTextCounter());
 
-            loopModeSettings = loopModeSettingsService.save(loopModeSettings);
+                loopModeSettings = loopModeSettingsService.save(loopModeSettings);
+            }
 
             ClientType clientType = null;
             if (testSettingsRequest.getClientType() != null) {
@@ -156,7 +159,7 @@ public class TestSettingsFacade {
 
                     List<ServerType> serverTypes;
 
-                    if (testSettingsRequest.getCapabilities().getRmbtHttp()) {
+                    if (testSettingsRequest.getCapabilities() != null && testSettingsRequest.getCapabilities().isRmbtHttp()) {
                         serverTypes = List.of(ServerType.RMBThttp, ServerType.RMBT);
                     } else if (ServerType.RMBTws.equals(testSettingsRequest.getServerType())) {
                         serverTypes = List.of(ServerType.RMBThttp, ServerType.RMBTws);
@@ -172,7 +175,7 @@ public class TestSettingsFacade {
                     Integer numberOfThreads = getNumberOfThreadsOrDefault(testSettingsRequest.getNumberOfThreads());
                     TestServer testServer = null;
 
-                    if (testSettingsRequest.getUserServerSelection()) {
+                    if (testSettingsRequest.isUserServerSelection()) {
                         final String preferServer = testSettingsRequest.getPreferredServer();
                         if (StringUtils.isNotBlank(preferServer))
                             testServer = testServerService.findByUuidAndActive(UUID.fromString(preferServer), true)
@@ -211,8 +214,12 @@ public class TestSettingsFacade {
                         Test test = getTest(testSettingsRequest, clientIpAddress, asn, asName, asCountry, clientAddress, language, timeZoneId, client, testUuid, testOpenUuid, testServerEncryption, numberOfThreads, testServer, geoIpCountry);
 
                         test = testService.save(test);
-                        loopModeSettings.setTestUuid(testUuid);
-                        loopModeSettings = loopModeSettingsService.save(loopModeSettings);
+
+                        if (loopModeSettings != null) {
+                            loopModeSettings.setTestUuid(testUuid);
+                            loopModeSettings = loopModeSettingsService.save(loopModeSettings);
+                            builder.loopUuid(loopModeSettings.getLoopUuid().toString());
+                        }
 
                         builder.provider(testService.getRmbtSetProviderFromAs(test.getUid()));
 
@@ -237,7 +244,6 @@ public class TestSettingsFacade {
                                 .testUuid(testUuid.toString())
                                 .openTestUuid("O" + testOpenUuid)
                                 .testId(test.getUid())
-                                .loopUuid(loopModeSettings.getLoopUuid().toString())
                                 .testWait(Math.max(waitTime, 0));
                         }
 
@@ -274,7 +280,7 @@ public class TestSettingsFacade {
 
         test.setUuid(testUuid);
         test.setOpenTestUuid(testOpenUuid);
-        test.setClientId(client.getUid());
+        test.setClient(client);
         test.setClientName(testSettingsRequest.getServerType());
         test.setClientVersion(testSettingsRequest.getTestSetVersion());
         test.setClientSoftwareVersion(testSettingsRequest.getSoftwareVersion());
@@ -283,7 +289,7 @@ public class TestSettingsFacade {
         test.setClientPublicIpAnonymized(HelperFunctions.anonymizeIp(clientAddress));
         test.setCountryGeoip(geoIpCountry);
         test.setServerId(testServer.getUid());
-        test.setServerPort(testServer.getPort());
+        test.setServerPort(testServerEncryption ? testServer.getPortSsl() : testServer.getPort());
         test.setUseSsl(testServerEncryption);
         test.setTimezone(timeZoneId);
         test.setClientTime(ZonedDateTime.ofInstant(Instant.ofEpochSecond(testSettingsRequest.getTime()), ZoneId.of(timeZoneId)));
@@ -299,7 +305,7 @@ public class TestSettingsFacade {
         String reverseDns = HelperFunctions.reverseDNSLookup(clientAddress);
         if (StringUtils.isNotBlank(reverseDns))
             test.setPublicIpRdns(reverseDns.replaceFirst("\\.$", ""));
-        test.setRunNdt(testSettingsRequest.getNdt());
+        test.setRunNdt(testSettingsRequest.isNdt());
         return test;
     }
 
@@ -352,7 +358,6 @@ public class TestSettingsFacade {
     private LoopModeSettings toLoopModeSettings(TestSettingsRequest.LoopModeInfo loopModeInfo) {
         var loopModeSettings = new LoopModeSettings();
         loopModeSettings.setClientUuid(UUID.fromString(loopModeInfo.getClientUuid()));
-        loopModeSettings.setLoopUuid(UUID.fromString(loopModeInfo.getLoopUuid()));
         loopModeSettings.setTestUuid(UUID.fromString(loopModeInfo.getTestUuid()));
         loopModeSettings.setMaxDelay(loopModeInfo.getMaxDelay());
         loopModeSettings.setMaxMovement(loopModeInfo.getMaxMovement());

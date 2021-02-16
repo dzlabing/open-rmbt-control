@@ -1,11 +1,11 @@
 package at.rtr.rmbt.request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import at.rtr.rmbt.model.enums.ClientType;
 import at.rtr.rmbt.model.enums.ServerType;
 import at.rtr.rmbt.model.enums.TestPlatform;
 import at.rtr.rmbt.model.enums.TestStatus;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ApiModel(description = "Request to obtain configuration for basic test")
 public class TestSettingsRequest {
 
@@ -28,7 +29,7 @@ public class TestSettingsRequest {
 
     @ApiModelProperty(notes = "Is NDT test going to be executed")
     @JsonProperty("ndt")
-    private Boolean ndt;
+    private boolean ndt;
 
     @ApiModelProperty(notes = "End status of the previous executed test")
     @JsonProperty("previousTestStatus")
@@ -48,7 +49,7 @@ public class TestSettingsRequest {
 
     @ApiModelProperty(notes = "Whether user have an option to select measurement server by himself")
     @JsonProperty("user_server_selection")
-    private Boolean userServerSelection;
+    private boolean userServerSelection;
 
     @ApiModelProperty(notes = "UUID of the measurement server which user prefers. Leave empty if no preference.", example = "893ee514-6432-43de-a2e9-2f9b0b6716da")
     @JsonProperty("prefer_server")
@@ -95,7 +96,7 @@ public class TestSettingsRequest {
 
     @ApiModelProperty(notes = "Set to true if loop mode is on")
     @JsonProperty("user_loop_mode")
-    private Boolean userLoopMode;
+    private boolean userLoopMode;
 
     @JsonProperty("loopmode_info")
     private LoopModeInfo loopModeInfo;
@@ -159,7 +160,7 @@ public class TestSettingsRequest {
         private Float bearing;
 
         @JsonProperty("mock_location")
-        private Boolean mockLocation;
+        private boolean mockLocation;
 
         @JsonProperty("satellites")
         private Integer satellites;
@@ -175,7 +176,7 @@ public class TestSettingsRequest {
         private String permission;
 
         @ApiModelProperty(notes = "True if it is granted, false otherwise")
-        private Boolean status;
+        private boolean status;
     }
 
     @Getter
@@ -236,7 +237,7 @@ public class TestSettingsRequest {
 
         @ApiModelProperty(notes = "True, if the client can handle the RMBThttp protocol")
         @JsonProperty("RMBThttp")
-        private Boolean rmbtHttp;
+        private boolean rmbtHttp;
 
         @Getter
         @Setter
@@ -255,7 +256,7 @@ public class TestSettingsRequest {
         @EqualsAndHashCode
         public static class QosCapabilities {
             @JsonProperty("supports_info")
-            private Boolean supportsInfo;
+            private boolean supportsInfo;
         }
     }
 }

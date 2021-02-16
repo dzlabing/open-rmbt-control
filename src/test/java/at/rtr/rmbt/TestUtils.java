@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class TestUtils {
-    private final ObjectMapper mapper = new ObjectMapper()
+    public static final ObjectMapper mapper = new ObjectMapper()
         .registerModule(new JavaTimeModule());
 
     public static String asJsonString(final Object obj) throws JsonProcessingException {
