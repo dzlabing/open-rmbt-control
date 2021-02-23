@@ -1,9 +1,9 @@
 package at.rtr.rmbt.request;
 
-import at.rtr.rmbt.model.enums.ClientType;
-import at.rtr.rmbt.model.enums.ServerType;
-import at.rtr.rmbt.model.enums.TestPlatform;
-import at.rtr.rmbt.model.enums.TestStatus;
+import at.rtr.rmbt.enums.ClientType;
+import at.rtr.rmbt.enums.ServerType;
+import at.rtr.rmbt.enums.TestPlatform;
+import at.rtr.rmbt.enums.TestStatus;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -151,7 +151,7 @@ public class TestSettingsRequest {
         private Long time;
 
         @JsonProperty("age")
-        private Integer age;
+        private Long age;
 
         @JsonProperty("accuracy")
         private Float accuracy;

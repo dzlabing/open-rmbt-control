@@ -1,13 +1,17 @@
 package at.rtr.rmbt.repository;
 
 import at.rtr.rmbt.model.Test;
+import at.rtr.rmbt.enums.TestStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface TestRepository extends PagingAndSortingRepository<Test, Long> {
     @Procedure("rmbt_set_provider_from_as")
@@ -37,5 +41,8 @@ public interface TestRepository extends PagingAndSortingRepository<Test, Long> {
         "ORDER BY model ASC", nativeQuery = true)
     List<String> getDistinctModelByClientId(Long clientId);
 
-    Page<Test> findAll(Pageable pageable);
+    Page<Test> findAllByStatusIn(List<TestStatus> statuses, Pageable pageable);
+
+    @Query(value = "SELECT * FROM test WHERE uuid = :testUUID AND (status is null or status in (:testStatuses))", nativeQuery = true)
+    Optional<Test> findByUuidAndStatusesIn(UUID testUUID, Collection<String> testStatuses);
 }

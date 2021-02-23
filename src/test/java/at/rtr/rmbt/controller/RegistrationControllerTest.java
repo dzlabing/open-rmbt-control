@@ -3,10 +3,10 @@ package at.rtr.rmbt.controller;
 import at.rtr.rmbt.TestUtils;
 import at.rtr.rmbt.advice.RtrAdvice;
 import at.rtr.rmbt.facade.TestSettingsFacade;
-import at.rtr.rmbt.model.enums.ClientType;
-import at.rtr.rmbt.model.enums.ServerType;
-import at.rtr.rmbt.model.enums.TestPlatform;
-import at.rtr.rmbt.model.enums.TestStatus;
+import at.rtr.rmbt.enums.ClientType;
+import at.rtr.rmbt.enums.ServerType;
+import at.rtr.rmbt.enums.TestPlatform;
+import at.rtr.rmbt.enums.TestStatus;
 import at.rtr.rmbt.request.TestSettingsRequest;
 import at.rtr.rmbt.response.ErrorResponse;
 import at.rtr.rmbt.response.TestSettingsResponse;
@@ -60,7 +60,7 @@ public class RegistrationControllerTest {
             "1",
             3,
             TestSettingsRequest.ProtocolVersion.IPV4,
-            new TestSettingsRequest.Location(1.0, 1.0, "provider", 1f, 1.0, 1L, 1, 1f, 1f, false, 1),
+            new TestSettingsRequest.Location(1.0, 1.0, "provider", 1f, 1.0, 1L, 1L, 1f, 1f, false, 1),
             System.currentTimeMillis(),
             "Europe/Vienna",
             ServerType.RMBT,

@@ -1,10 +1,12 @@
 package at.rtr.rmbt.request;
 
-import at.rtr.rmbt.model.enums.ServerType;
+import at.rtr.rmbt.enums.ServerType;
 import com.bedatadriven.jackson.datatype.jts.serialization.GeometryDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 import org.locationtech.jts.geom.Geometry;
+
+import java.util.Set;
 
 @Getter
 @Builder
@@ -36,7 +38,7 @@ public class TestServerRequest {
 
     private String webAddressIpV6;
 
-    private ServerType serverType;
+    private Set<ServerType> serverTypes;
 
     private Integer priority;
 
@@ -49,4 +51,6 @@ public class TestServerRequest {
     private Boolean selectable;
 
     private String node;
+
+    private boolean encrypted;
 }

@@ -1,11 +1,11 @@
 package at.rtr.rmbt.mapper.impl;
 
+import at.rtr.rmbt.config.UUIDGenerator;
 import at.rtr.rmbt.mapper.TestServerMapper;
 import at.rtr.rmbt.model.TestServer;
 import at.rtr.rmbt.request.TestServerRequest;
 import at.rtr.rmbt.response.TestServerResponse;
 import at.rtr.rmbt.response.TestServerResponseForSettings;
-import com.specure.core.service.impl.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +37,14 @@ public class TestServerMapperImpl implements TestServerMapper {
                 .location(testServer.getLocation())
                 .webAddressIpV4(testServer.getWebAddressIpV4())
                 .webAddressIpV6(testServer.getWebAddressIpV6())
-                .serverType(testServer.getServerType())
+                .serverTypes(testServer.getServerTypes())
                 .priority(testServer.getPriority())
                 .weight(testServer.getWeight())
                 .active(testServer.getActive())
                 .key(testServer.getKey())
                 .selectable(testServer.getSelectable())
                 .node(testServer.getNode())
+                .encrypted(testServer.isEncrypted())
                 .build();
     }
 
@@ -61,7 +62,7 @@ public class TestServerMapperImpl implements TestServerMapper {
                 .location(testServerRequest.getLocation())
                 .webAddressIpV4(testServerRequest.getWebAddressIpV4())
                 .webAddressIpV6(testServerRequest.getWebAddressIpV6())
-                .serverType(testServerRequest.getServerType())
+                .serverTypes(testServerRequest.getServerTypes())
                 .priority(testServerRequest.getPriority())
                 .uuid(uuidGenerator.generateUUID())
                 .weight(testServerRequest.getWeight())
@@ -69,6 +70,7 @@ public class TestServerMapperImpl implements TestServerMapper {
                 .key(testServerRequest.getKey())
                 .selectable(testServerRequest.getSelectable())
                 .node(testServerRequest.getNode())
+                .encrypted(testServerRequest.isEncrypted())
                 .build();
     }
 }
