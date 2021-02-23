@@ -1,7 +1,7 @@
 package at.rtr.rmbt.model;
 
 
-import at.rtr.rmbt.model.enums.*;
+import at.rtr.rmbt.enums.*;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +11,7 @@ import org.hibernate.annotations.TypeDefs;
 import org.locationtech.jts.geom.Geometry;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ import java.util.UUID;
 @TypeDefs({
         @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 })
-public class Test {
+public class Test implements Serializable {
     @Id
     @Column(name = "uid")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "test_seq")
@@ -478,8 +479,16 @@ public class Test {
     )
     private LoopModeSettings loopModeSettings;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "open_test_uuid",
+            referencedColumnName = "open_test_uuid",
+            insertable = false, nullable = false, updatable = false
+    )
+    private List<RadioCell> radioCell;
+
     @PrePersist
     protected void preInsert() {
-        this.time = ZonedDateTime.now();
+        this.timestamp = ZonedDateTime.now();
     }
 }

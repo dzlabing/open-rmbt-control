@@ -1,18 +1,18 @@
 package at.rtr.rmbt.service.impl;
 
 import at.rtr.rmbt.TestConstants;
+import at.rtr.rmbt.config.UUIDGenerator;
 import at.rtr.rmbt.constant.Config;
 import at.rtr.rmbt.exception.NotSupportedClientVersionException;
 import at.rtr.rmbt.model.RtrClient;
 import at.rtr.rmbt.model.Settings;
-import at.rtr.rmbt.model.enums.ClientType;
+import at.rtr.rmbt.enums.ClientType;
 import at.rtr.rmbt.repository.SettingsRepository;
 import at.rtr.rmbt.request.AdminSettingsBodyRequest;
 import at.rtr.rmbt.request.AdminSettingsRequest;
 import at.rtr.rmbt.request.RtrSettingsRequest;
 import at.rtr.rmbt.response.*;
 import at.rtr.rmbt.service.*;
-import com.specure.core.service.impl.UUIDGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

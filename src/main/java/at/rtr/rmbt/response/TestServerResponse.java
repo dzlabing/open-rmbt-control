@@ -1,12 +1,14 @@
 package at.rtr.rmbt.response;
 
-import at.rtr.rmbt.model.enums.ServerType;
+import at.rtr.rmbt.enums.ServerType;
 import com.bedatadriven.jackson.datatype.jts.serialization.GeometrySerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.locationtech.jts.geom.Geometry;
+
+import java.util.Set;
 
 @SuperBuilder
 @Getter
@@ -38,7 +40,7 @@ public class TestServerResponse {
 
     private final String webAddressIpV6;
 
-    private final ServerType serverType;
+    private final Set<ServerType> serverTypes;
 
     private final Integer priority;
 
@@ -51,4 +53,6 @@ public class TestServerResponse {
     private final Boolean selectable;
 
     private final String node;
+
+    private final boolean encrypted;
 }
